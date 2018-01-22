@@ -1,24 +1,52 @@
-# react-native-multiple-image-picker
+> @chuangbo
+> 
+> *[liaoyuan-io/react-native-multiple-image-picker](https://github.com/liaoyuan-io/react-native-multiple-image-picker) 的版本在我这里出现很多编译错误。虽然完全不懂 Android 开发，但是在一番尝试下，这个版本是目前可以编译并且正常使用的。在我的 pull requests 都被合并以后，这个 repo 就没有存在的必要了。*
+
+## react-native-multiple-image-picker
+
 React Native Multiple Image Picker is a React Native native module wrapping [TZImagePickerController](https://github.com/banchichen/TZImagePickerController) for iOS (iOS 8+ for using PhotoKit) and [RxGalleryFinal](https://github.com/FinalTeam/RxGalleryFinal) for Android (Android 4.1+). This module allows you to pick multiple images for further processing.
 
-React Native Multiple Image Picker 多图片选择器 是一个 React Native 原生模块，封装了 [TZImagePickerController](https://github.com/banchichen/TZImagePickerController)（用于 iOS 8+，因为使用了 PhotoKit）和 [RxGalleryFinal](https://github.com/FinalTeam/RxGalleryFinal)（用于 Android 4.1+，尚处于**试验阶段**）。使用这个模块你可以一次选择多张图片，以供进一步处理。
+React Native Multiple Image Picker 多图片选择器 是一个 React Native 原生模块，封装了 [TZImagePickerController](https://github.com/banchichen/TZImagePickerController)（用于 iOS 8+，因为使用了 PhotoKit）和 [RxGalleryFinal](https://github.com/FinalTeam/RxGalleryFinal)（用于 Android 4.1+）。使用这个模块你可以一次选择多张图片，以供进一步处理。
 
-## Known Issues
 
-- Currently, [RxGalleryFinal](https://github.com/FinalTeam/RxGalleryFinal) is still in a **pre-release** stage and is **NOT READY for production** yet. Image previews are not presented in correct aspect ratios.
-- The `master` branch is still using the old React Native import path. If you has upgrade to React Native 0.40+ , please use `rn40` branch instead. 
+### Known Issues
 
-## Install
+- Error:The number of method references in a .dex file cannot exceed 64K.
 
-### iOS
+    Add this to dependencies
 
-1. Run `npm install --save react-native-multiple-image-picker` .
+    ```
+    compile 'com.android.support:multidex:1.0.1'
+    ```
+
+    Then add `multiDexEnabled true`
+
+    ```
+    android {
+        defaultConfig {
+            // add this to defaultConfig
+            multiDexEnabled true
+        }
+    }
+    ```
+
+### Install
+
+#### iOS
+
+1. Run `npm install --save github:chuangbo/react-native-multiple-image-picker` .
 2. Add `RCTMultipleImagePicker` to your iOS project.
 3. Add `libRCTMultipleImagePicker.a` to your `Link Binary with Libraries` section in `Build Phases` .
 4. Copy `TZImagePickerController.framework` to your `Framework` folder.
 5. Add `TZImagePickerController.framework` to your `Framework` group and `Embedded Binaries` section in `Target->General` .
 
-### Android
+如果有使用 CocoaPods 的话，TZImagePickerController 可以自动安装，添加下面这行到 Podfile 里
+
+```
+pod 'TZImagePickerController', :path => '../node_modules/react-native-multiple-image-picker/ios/TZImagePickerController'
+```
+
+#### Android
 
 1. Run `npm install --save react-native-multiple-image-picker` .
 2. Add `new MultipleImagePickerPackage()` to your `getPackages` return in `android/app/src/main/java/com/your/path/MainApplication.java`.
@@ -43,7 +71,7 @@ React Native Multiple Image Picker 多图片选择器 是一个 React Native 原
     project(':react-native-multiple-image-picker').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-multiple-image-picker/android')
     ```
     
-## Usage
+### Usage
 
 ```javascript
 import MultipleImagePicker from 'react-native-multiple-image-picker';
@@ -62,7 +90,7 @@ MultipleImagePicker.launchImageGallery(options).then((newSelectedPaths) => {
 });
 ```
 
-## Error Codes
+### Error Codes
 
 | Code                          | Platform         | Description                                                                                                            |
 | ----------------------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------- |
