@@ -30,6 +30,16 @@ React Native Multiple Image Picker 多图片选择器 是一个 React Native 原
     }
     ```
 
+- values-v24.xml No resource found that matches the given name 'android:TextAppearance.Material.Widget.Button.Borderless.Colored'
+
+    不知道原因，但是解决方法是修改 app/build.gradle，使用 24 版本的 sdk
+
+    ```
+    compileSdkVersion 24
+    buildToolsVersion '24.0.1'
+    compile 'com.android.support:appcompat-v7:24.0.1'
+    ```
+
 ### Install
 
 #### iOS
