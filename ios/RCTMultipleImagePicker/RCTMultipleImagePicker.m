@@ -24,9 +24,12 @@ RCT_EXPORT_MODULE();
     return self;
 }
 
-+ (BOOL)requiresMainQueueSetup
-{
++ (BOOL)requiresMainQueueSetup {
     return YES;
+}
+
+- (dispatch_queue_t)methodQueue {
+    return dispatch_get_main_queue();
 }
 
 RCT_EXPORT_METHOD(launchImageGallery:(NSDictionary *)options resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
@@ -130,21 +133,39 @@ RCT_EXPORT_METHOD(getBase64String:(NSString *)input callback:(RCTResponseSenderB
     if (status == PHAuthorizationStatusAuthorized) {
         callback(YES);
         return;
-    } else if (status == PHAuthorizationStatusNotDetermined) {
+    }
+    
+    if (@available(iOS 14, *)) {
+        if (status == PHAuthorizationStatusLimited) {
+            callback(YES);
+            return;
+        }
+    }
+    
+    if (status == PHAuthorizationStatusNotDetermined) {
         [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+            bool result = NO;
+            
             if (status == PHAuthorizationStatusAuthorized) {
-                callback(YES);
-                return;
+                result = YES;
             }
-            else {
-                callback(NO);
-                return;
+            
+            if (@available(iOS 14, *)) {
+                if (status == PHAuthorizationStatusLimited) {
+                    result = YES;
+                }
             }
+            
+            // Prevent first time request permission alert exception
+            // `Call must be made on main thread`
+            dispatch_async(dispatch_get_main_queue(), ^{
+                callback(result);
+            });
         }];
+        return;
     }
-    else {
-        callback(NO);
-    }
+    
+    callback(NO);
 }
 
 @end
